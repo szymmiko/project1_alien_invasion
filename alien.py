@@ -20,6 +20,3 @@ class Alien(Sprite):
 
         # the exact horizontal position of the alien stored as a float
         self.x = float(self.rect.x)
-
-    def update(self):
-        """"""
