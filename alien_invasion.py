@@ -36,9 +36,12 @@ class AlienInvasion:
         """Starting the main game loop."""
         while True:
             self._check_events()
-            self.ship.update()
-            self._update_bullets()
-            self._update_aliens()
+
+            if self.stats.game_active:
+                self.ship.update()
+                self._update_bullets()
+                self._update_aliens()
+
             self._update_screen()
 
     def _check_events(self):
@@ -111,21 +114,36 @@ class AlienInvasion:
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self._ship_hit()
 
+        # searching for aliens reaching the bottom of the screen
+        self._check_aliens_bottom()
+
     def _ship_hit(self):
         """Reaction to alien hitting ship."""
-        # decreasing the value stored in ships_left
-        self.stats.ships_left -= 1
+        if self.stats.ships_left > 0:
+            # decreasing the value stored in ships_left
+            self.stats.ships_left -= 1
 
-        # deleting the content of the groups aliens and bullets
-        self.aliens.empty()
-        self.bullets.empty()
+            # deleting the content of the groups aliens and bullets
+            self.aliens.empty()
+            self.bullets.empty()
 
-        # creating new fleet and centering the ship
-        self._create_fleet()
-        self.ship.center_ship()
+            # creating new fleet and centering the ship
+            self._create_fleet()
+            self.ship.center_ship()
 
-        # pause
-        sleep(0.5)
+            # pause
+            sleep(0.5)
+        else:
+            self.stats.game_active = False
+
+    def _check_aliens_bottom(self):
+        """Checking if any aliens have reached the bottom of the screen."""
+        screen_rect = self.screen.get_rect()
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= screen_rect.bottom:
+                # just like when a ship collides with an alien
+                self._ship_hit()
+                break
 
     def _create_fleet(self):
         """Creation of a complete alien fleet."""
