@@ -4,11 +4,12 @@ from time import sleep
 import pygame
 
 from settings import Settings
-from game_stats import GameStats
-from button import Button
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from game_stats import GameStats
+from button import Button
+from scoreboard import Scoreboard
 
 
 class AlienInvasion:
@@ -26,6 +27,8 @@ class AlienInvasion:
 
         # creating an instance storing statistical data about the game
         self.stats = GameStats(self)
+        # creating an instance of the Scoreboard class
+        self.sb = Scoreboard(self)
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
@@ -229,6 +232,9 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
+
+        # displaying information about scoring
+        self.sb.show_score()
 
         # displaying the button only when the game is inactive
         if not self.stats.game_active:
