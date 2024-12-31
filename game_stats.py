@@ -9,6 +9,9 @@ class GameStats:
         # launching the "Alien Invasion" game in inactive state
         self.game_active = False
 
+        # the best score should never be reset
+        self.high_score = 0
+
     def reset_stats(self):
         """Initialization of statistical data that may change during
         the game."""
